@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>SPIFedit</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='spifedit.css') }}"/>
+<style>
+	div#classifs { margin-top: 20px;  }
+	div#classifs th { text-align:left;  } 
+</style>
+</head>
+
+<body>
+<h1>X.841 - SPIFedit</h1>
+<div id="errorzone"><p id="errorMsg">&nbsp;</p></div>
+
+<div id="dropdown">
+<label class="spifChoice" for="spifChoice">Security Policy Info. File </label>
+
+<select  id="spifChoice" onchange='policySelect(this.select)'>
+{% for item in items %}
+	<option value="{{item.oid}}" {% if selected == item.oid %}selected{% endif %}> 
+	   {{item.name}} - {{item.oid}}
+	</option>
+{% endfor %}
+</select>
+
+
+
+
+<div id="divClassifs">
+<table id="tableClassifs" width=80% align=center >
+<thead><tr>
+<th>&nbsp;</th><th>Name</th><th>Hierarchy</th><th>Label & Cert. Value</th>
+</tr></thead>
+
+<tbody id="tbodyClassifs"><tr>
+{% for classif in classifs %}
+<tr class="trClassifs">
+	<td class="delClassif"/><input name='delClassif_button' type='button' onClick='Delete_Ligne_Classif()' value='  -  '>
+	<td class="name">{{classif.name}}</td>
+	<td class="hierarchy">{{classif.hierarchy}}</td>
+	<td class="lacv">{{classif.lacv}}</td>
+</tr>
+{% endfor %}
+</tr></tbody>
+
+<tfoot>
+<tr><form id="formClassif" method="post" data-ajax = 'false'>
+<td><input name='plus_button' type='button' onClick='Create_Ligne_Add_Classif()' value='  +  '></td>
+<td><input type="text" name="name"/></td>
+<td><input type="number" name="hierarchy"/></td>
+<td><input type="number" name="lacv"/></td>
+</form></tr>
+</tfoot>
+</table>
+</div>
+</table>
+</div>
+
+
+
+<script>
+var serverHost = "http://x841.home:5000/";
+var urlClassifs = serverHost + "v1/classifications/";
+var xmlhttp = new XMLHttpRequest();
+
+
+// add "<td class=htmlclass>data</td>"
+function addClassifCell(data, htmlclass, row) {
+	var td = document.createElement('td');
+	td.innerHTML = data;
+	td.class = htmlclass;
+	row.append(td);
+} // addClassifCell
+
+// Add a classification row in tableClassifs
+function addClassifRow(data) {
+	// Add row
+	var tr = document.createElement('tr');
+	tr.setAttribute("id","trClassifs");
+	document.getElementById("tbodyClassifs").append(tr);
+	
+	// Add cells (td) in row
+	addClassifCell(" ","empty",tr);
+	addClassifCell(data.name,"name",tr);
+	addClassifCell(data.hierarchy,"hierarchy",tr);
+	addClassifCell(data.lacv,"lacv",tr);
+} // addClassifRow
+
+
+// Callback when classifications JSON received
+function classifications(resp) {
+	var arr = JSON.parse(resp);
+	var tbody = document.getElementById('tbodyClassifs');
+	
+	while (tbody.firstChild) tbody.removeChild(tbody.firstChild); // Remove all table rows
+	for(var i = 0; i < arr.length; i++) // Add classifications from selected spif
+		addClassifRow(arr[i]); 
+} // classifications
+
+// Callback when policy is selected
+function policySelect(val) {
+	var spifChoice = document.getElementById("spifChoice").selectedIndex;
+	var oid = document.getElementById("spifChoice").options[spifChoice].value;
+	var targetUrl = urlClassifs + oid; // http://server/v1/classifications/<oid>
+
+	document.getElementById("tbodyClassifs").innerHTML = "";
+	document.getElementById("errorMsg").innerHTML = "&nbsp;";
+	xmlhttp.onreadystatechange=function() {
+	    if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+	        classifications(xmlhttp.responseText);
+	    }
+	}
+	xmlhttp.open("GET", targetUrl, true);
+	xmlhttp.send();
+} // policySelect
+
+// Check some data (input field) has been entered (field is not empty) - shorthand
+function check_data_provided(str,inLabel) {
+	if (str.length > 0) return true; // OK
+	document.getElementById("errorMsg").innerHTML = inLabel;
+	return false; // NOK
+} // check_data_provided
+
+// Set Error message - shorthand
+function errorMsg(label) {
+	document.getElementById("errorMsg").innerHTML = label;
+} // errorMsg
+
+
+// Check some data (input field) is duplicate against a row - shorthand
+function check_data_duplicate(str,className,inLabel) {
+	// Get all "td class="className" nodes
+	var cells = document.getElementsByClassName(className);
+
+	for (var i=0; i < cells.length; i++) {
+		if (cells[i].tagName != 'TD') continue; // just check table cells
+    	if (str.toUpperCase() == cells[i].innerHTML.toUpperCase()) {
+    		errorMsg(inLabel);
+    		return false; // NOK
+    	} // if
+    } // for cells
+	return true; // OK (no duplicate found)
+} // check_data_duplicate
+
+
+// Callback for the "Add classification" button
+function Create_Ligne_Add_Classif() {
+	var form = document.getElementById("formClassif");
+	var name = document.getElementById("formClassif").name.value;
+	var lacv = document.getElementById("formClassif").lacv.value;
+	var hierarchy = document.getElementById("formClassif").hierarchy.value;
+	var choice = document.getElementById("spifChoice").selectedIndex;
+	var oid = document.getElementById("spifChoice").options[choice].value;
+	var targetUrl = serverHost + "v1/classifications/" + oid;
+	
+	if (!check_data_provided(name,"Error: classification name is mandatory")) return; // NOK - empty names not allowed
+	if (!check_data_duplicate(name, "name","Error: duplicate classification name")) return; // NOK - duplicate name
+	if (!check_data_provided(hierarchy.toString(),"Error: hierarchy level is mandatory")) return; // NOK
+	if (!check_data_duplicate(hierarchy.toString(),"hierarchy", "Error: duplicate hierarchy level")) return; // NOK
+	if (!check_data_provided(lacv.toString(),"Error: Label & Cert. Value is mandatory")) return; // NOK
+	if (!check_data_duplicate(lacv.toString(),"lacv", "Error: duplicate Label & Cert. Value")) return; // NOK
+	errorMsg("&nbsp;");
+
+	document.getElementById('formClassif').action = targetUrl;
+	document.forms['formClassif'].submit();
+
+} // Create_Ligne_Add_Classif
+
+
+
+//Callback for the "Add classification" button
+function Delete_Ligne_Classif() {
+	var choice = document.getElementById("spifChoice").selectedIndex;
+	var oid = document.getElementById("spifChoice").options[choice].value;
+} // Delete_Ligne_Classif
+
+</script>

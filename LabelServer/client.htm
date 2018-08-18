@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Client for Label Server</title>
+<style>
+	div#classifs { margin-top: 20px;  }
+	div#classifs th { text-align:left;  } 
+</style>
+</head>
+
+<body>
+<div id="errorzone"><p>&nbsp;</p></div>
+<h1>Label Server Client</h1>
+
+<div id="dropdown"></div>
+
+<div id="classifs" style="visibility:collapse">
+
+
+<table id="Tclassifs" width=80% align=center  >
+<thead>
+<tr><th colspan="3"><p id="oid"></p></th></tr></tr>
+<tr><th>&nbsp;</th><th>Name</th><th>Hierarchy</th><th>Label & Cert. Value</th></tr>
+</thead>
+<tbody id="body_classifs"></tbody>
+<tfoot>
+<tr><form id="formClassif" method="post" data-ajax = 'false'>
+<td><input name='plus_button' type='button' onClick='Create_Ligne_Add_Classif()' value='  +  '></td>
+<td><input name='inputName' type='text'/></td>
+<td><input type='number' name='inputHier'/></td>
+<td><input type='number' name='inputLacv'/></td>
+</form></tr>
+</tfoot>
+</table>
+</div>
+	
+
+
+
+
+
+<script>
+var xmlhttp = new XMLHttpRequest();
+var serverHost = "http://127.0.0.1:5000/";
+var url = serverHost + "v1/policy";
+var oidGlobal = "";
+
+xmlhttp.onreadystatechange=function() {
+    if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+        spifFiles(xmlhttp.responseText);
+    }
+}
+xmlhttp.open("GET", url, true);
+xmlhttp.send();
+
+function policySelect(val) {
+	var select = document.getElementById("policies");
+	var policyUrl = url + "/" + select.value;
+	
+    // First line in dropdown
+	if (select.value == '0') {
+		document.getElementById("classifs").innerHTML = "";
+		document.getElementById("oid").innerHTML = "";
+		return;
+	}
+	document.getElementById("errorzone").innerHTML = "<p>&nbsp;</p>";
+	document.getElementById("oid").innerHTML = "Object id :&nbsp;" + select.value;
+	oidGlobal = select.value;
+	
+	xmlhttp.onreadystatechange=function() {
+	    if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+	    	classifications(xmlhttp.responseText);
+	    }
+	}
+	xmlhttp.open("GET", policyUrl, true);
+	xmlhttp.send();
+}
+
+function spifFiles(response) {
+	var data = JSON.parse(response);
+    var i;
+    var txt = "";
+	var line="";
+    
+    txt += "<label for='policies'>Security policy :&nbsp;</label>"
+    txt += "<select onchange='policySelect(this.select)' id='policies'>";
+    txt += "<option value='0'>Select policy file</option>";
+    for(i = 0; i < data.length; i++) {
+    	line = "<option value='" + data[i].oid + "'>" + data[i].name + "</option>";
+    	txt += line;
+    }
+    txt += "</select>";
+    document.getElementById("dropdown").innerHTML = txt;
+}
+
+// Check some data (input field) has been entered - shorthand
+function check_data_provided(str,inLabel) {
+	if (str.length > 0) return true; // OK
+	document.getElementById("errorzone").innerHTML = "<p class='errorMsg'>" + inLabel + "</p>";
+	return false; // NOK
+} // check_data_provided
+
+//Check some data (input field) is duplicate against a row - shorthand
+function check_data_duplicate(str,colNumber,inLabel) {
+	var tbody = document.getElementById('Tclassifs').getElementsByTagName("tbody")[0];
+	var rows = tbody.getElementsByTagName("tr");
+	for(i = 0; i < rows.length; i++) { // loop on every row
+		cell = rows[i].getElementsByTagName("td")[colNumber];
+		if (str.toUpperCase() == cell.innerHTML.toUpperCase()) {
+			document.getElementById("errorzone").innerHTML = "<p class='errorMsg'>" + inLabel + "</p>";
+			return false; // NOK
+		}
+	} // for
+	return true; // OK
+} // check_data_duplicate
+
+
+// Check value entered when adding a classification
+function Create_Ligne_Add_Classif() {
+	var form = document.getElementById("formClassif");
+	var name = form.inputName.value;
+	var hierarchy = form.inputHier.value;
+	var lacv = form.inputLacv.value;
+	var tbody = document.getElementById('Tclassifs').getElementsByTagName("tbody")[0];
+	var rows = tbody.getElementsByTagName("tr");
+	var policyUrl = serverHost + "v1/classification/" + oidGlobal;
+	
+	document.getElementById("errorzone").innerHTML = "<p>&nbsp;</p>";
+
+	if (!check_data_provided(name,"Error: classification name is mandatory")) return; // NOK - empty names not allowed
+	if (!check_data_duplicate(name,1,"Error: duplicate classification name")) return; // NOK - duplicate name
+	if (!check_data_provided(hierarchy.toString(),"Error: hierarchy level is mandatory")) return; // NOK
+	if (!check_data_duplicate(hierarchy.toString(),2,"Error: duplicate hierarchy level")) return; // NOK
+	if (!check_data_provided(lacv.toString(),"Error: Label & Cert. Value is mandatory")) return; // NOK
+	if (!check_data_duplicate(lacv.toString(),3,"Error: duplicate Label & Cert. Value")) return; // NOK
+
+	
+	document.getElementById('formClassif').action = policyUrl;
+	document.forms['formClassif'].submit();
+
+	
+} // Create_Ligne_Add_Classif
+
+
+// Fill the classification table
+function classifications(response) {
+	var data = JSON.parse(response);
+	var arr = data;
+	var txt = "";
+	
+	for(i = 0; i < arr.length; i++) {
+		txt += "<tr><td>&nbsp;</td><td>" + arr[i].name + "</td><td>" + arr[i].hierarchy + "</td><td>" + arr[i].lacv + "</td>";
+	}
+	document.getElementById("body_classifs").innerHTML = txt;
+	document.getElementById("classifs").style.visibility = "visible";
+	document.getElementById("errorzone").innerHTML = "<p>&nbsp;</p>";
+} // classifications
+
+</script>
+
+</body>
+</html>
