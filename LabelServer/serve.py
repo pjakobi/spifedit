@@ -1,4 +1,6 @@
 # serve.py
+import gi
+gi.require_version("Gtk", "3.0")
 import yaml
 import json
 import sys
@@ -20,7 +22,7 @@ from logging import config
 
 from spif.ObjectId import ObjectId 
 from spif.Classification import Classification
-from pyanaconda.ui.gui.spokes.lib.custom_storage_helpers import selectedRaidLevel
+
 
 # creates a Flask application, named app
 app = Flask(__name__)
@@ -122,8 +124,7 @@ def addClassifications(oid):
 
     # Find SPIF & add classification
     confFile = configDirectory.getConfigFile(oid)
-    if confFile == None: 
-        return (Response("Unknown SPIF/object id",code=404)) 
+    if confFile == None: return (Response("Unknown SPIF/object id",code=404)) 
     
     classif = Classification(myDict)
     confFile.classifications.append(classif)
@@ -132,7 +133,18 @@ def addClassifications(oid):
     selected = str(oid)
     info = configDirectory.getInfo(oid)
     classifs = configDirectory.findOid(ObjectId(oid)).getClassifications()
-    logIndexPage(info,classifs,selected)
+#    logIndexPage(info,classifs,selected)
+    return render_template('index.html', items=info, classifs=classifs, selected=selected)
+
+# Delete a classification for a given SPIF (using its object id and classification name)
+@app.route('/v1/classifications/<oid>/<classif>', methods=['DELETE'])
+def delClassifications(oid,classif):
+    confFile = configDirectory.getConfigFile(oid)
+    if confFile == None: return (Response("Unknown SPIF/object id",code=404))
+    confFile.delClassification(classif)
+    classifs = configDirectory.findOid(ObjectId(oid)).getClassifications()
+    info = configDirectory.getInfo(oid)
+    selected = str(oid)
     return render_template('index.html', items=info, classifs=classifs, selected=selected)
 
 # run the application

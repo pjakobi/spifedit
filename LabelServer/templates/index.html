@@ -11,7 +11,7 @@
 
 
 <body>
-<h1>X.841 - SPIFedit</h1>
+<h1 id="title">X.841 - SPIFedit</h1>
 <div id="errorzone"><p id="errorMsg">&nbsp;</p></div>
 
 <div id="dropdown">
@@ -34,10 +34,14 @@
 <th>&nbsp;</th><th>Name</th><th>Hierarchy</th><th>Label & Cert. Value</th>
 </tr></thead>
 
+
+
 <tbody id="tbodyClassifs"><tr>
 {% for classif in classifs %}
 <tr class="trClassifs">
-	<td class="delClassif"/><input name='delClassif_button' type='button' onClick='Delete_Ligne_Classif()' value='  -  '>
+	<td class="delClassif"/>
+		<input id ='{{classif.name}}' class='delClassifButton' type='button' onClick='Delete_Ligne_Classif(this)' alt = 'Delete' value='  Del  '>
+	</td>
 	<td class="name">{{classif.name}}</td>
 	<td class="hierarchy">{{classif.hierarchy}}</td>
 	<td class="lacv">{{classif.lacv}}</td>
@@ -74,6 +78,22 @@ function addClassifCell(data, htmlclass, row) {
 	row.append(td);
 } // addClassifCell
 
+// Delete classification Button
+function AddDeleteButton(name,row) {
+	var td = document.createElement('td');
+	td.class = 'delClassif';
+	row.append(td);
+	
+	var button = document.createElement('input');
+	button.type = 'button';
+	button.id = name;
+	button.class = 'delClassifButton';
+	button.value = 'Delete';
+	button.onclick='Delete_Ligne_Classif(this)';
+	td.append(button);
+	
+} // AddDeleteButton
+
 // Add a classification row in tableClassifs
 function addClassifRow(data) {
 	// Add row
@@ -81,8 +101,11 @@ function addClassifRow(data) {
 	tr.setAttribute("id","trClassifs");
 	document.getElementById("tbodyClassifs").append(tr);
 	
-	// Add cells (td) in row
-	addClassifCell(" ","empty",tr);
+	// Add delete button
+	AddDeleteButton(data.name,tr)
+	
+	// Add data cells (td) in row
+//	addClassifCell(" ","empty",tr);
 	addClassifCell(data.name,"name",tr);
 	addClassifCell(data.hierarchy,"hierarchy",tr);
 	addClassifCell(data.lacv,"lacv",tr);
@@ -133,7 +156,6 @@ function errorMsg(label) {
 function check_data_duplicate(str,className,inLabel) {
 	// Get all "td class="className" nodes
 	var cells = document.getElementsByClassName(className);
-
 	for (var i=0; i < cells.length; i++) {
 		if (cells[i].tagName != 'TD') continue; // just check table cells
     	if (str.toUpperCase() == cells[i].innerHTML.toUpperCase()) {
@@ -170,10 +192,39 @@ function Create_Ligne_Add_Classif() {
 
 
 
-//Callback for the "Add classification" button
-function Delete_Ligne_Classif() {
+//Callback for the "Delete classification" button
+function Delete_Ligne_Classif(elmt) {
 	var choice = document.getElementById("spifChoice").selectedIndex;
 	var oid = document.getElementById("spifChoice").options[choice].value;
+	classif = elmt.getAttribute('id');
+	var targetUrl = serverHost + "v1/classifications/" + oid + "/" + classif;
+	xmlhttp.onreadystatechange=function() {
+	    if (xmlhttp.readyState == 4) {
+	    	if (xmlhttp.status == 200) classification_deleted(oid, classif);
+	    	else {
+	    		errorMsg("Error: " + xmlhttp.statusText); // should not happen
+	    		return;
+	    	}
+	    } // readyState == 4
+	}
+	xmlhttp.open("DELETE", targetUrl, true);
+	xmlhttp.send();
+
 } // Delete_Ligne_Classif
 
+// Return function (after deletion on server) for the delete classification operation
+function classification_deleted(oid, classif) {
+	errorMsg(""); // erase message
+	// erase line in web page
+	var x = document.getElementsByTagName("p");
+	var inputs = document.getElementById('tbodyClassifs').getElementsByTagName("input");
+	for (var i=0; i < inputs.length; i++) {
+		if (inputs[i].id == classif) {
+			var row = inputs[i].parentNode.parentNode;
+			row.parentNode.removeChild(row);
+			return;
+		}  // if
+	} // for
+	console.log("Internal Error. Classification not deleted :" + classif);
+} // classification_deleted
 </script>

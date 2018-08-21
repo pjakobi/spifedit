@@ -49,7 +49,13 @@ class ConfigFile(object):
     def getClassifications(self):
         return self.classifications
     
-   
+    def delClassification(self,classif):
+        for item in self.classifications:
+            if item.name.lower() == classif.lower(): # found
+                self.classifications.remove(item)
+                return
+# Log error : "Trying to delete a non existant classification : {0}/{1}".format(self.oid,classif)
+        
     def getInfo(self,selected=False):
         returnValue={}
         returnValue['oid'] = str(self.getOid())
