@@ -10,4 +10,20 @@ class Classification(object):
         else: self.lacv = -1
         
     def __str__(self):
-        return "Classification : {0} - ({1}, {2})".format(self.name,self.hierarchy,self.lacv)      
+        return "Classification : {0} - ({1}, {2})".format(self.name,self.hierarchy,self.lacv)   
+    
+    def setLacv(self, lacv):
+        self.lacv = lacv 
+        
+    def setHierarchy(self, hierarchy):
+        self.hierarchy = hierarchy
+    
+    def getName(self):
+        return self.name
+        
+    def getLacv(self):
+        return self.lacv
+    
+    def getHierarchy(self):
+        return self.hierarchy
+    

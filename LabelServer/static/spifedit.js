@@ -1,72 +1,6 @@
-<!DOCTYPE html>
-<html>
-<head>
-<title>SPIFedit</title>
-<link rel="stylesheet" href="{{ url_for('static', filename='spifedit.css') }}"/>
-<style>
-	div#classifs { margin-top: 20px;  }
-	div#classifs th { text-align:left;  } 
-</style>
-</head>
-
-
-<body>
-<h1 id="title">X.841 - SPIFedit</h1>
-<div id="errorzone"><p id="errorMsg">&nbsp;</p></div>
-
-<div id="dropdown">
-<label class="spifChoice" for="spifChoice">Security Policy Info. File </label>
-
-<select  id="spifChoice" onchange='policySelect(this.select)'>
-{% for item in items %}
-	<option value='{{item.oid}}' {% if selected == item.oid %}selected{% endif %}> 
-	   {{item.name}} - {{item.oid}}
-	</option>
-{% endfor %}
-</select>
-
-<div id="divClassifs">
-<table id="tableClassifs" width=80% align=center >
-<thead><tr>
-<th>&nbsp;</th><th>&nbsp;</th><th>Name</th><th>Hierarchy</th><th>Label & Cert. Value</th>
-</tr></thead>
-
-
-
-<tbody id="tbodyClassifs"><tr>
-{% for classif in classifs %}
-<tr class='trClassifs'>
-	<td id='{{item.oid}}' class='delClassifButtons'>
-		<input id ='{{classif.name}}' class='delClassifButton' type='button' onClick='Delete_Ligne_Classif(this)' value='  Delete  '/>
-	</td><td class='chgClassifButtons' id='{{item.oid}}'>
-		<input id ='{{classif.name}}' class='chgClassifButton' type='button' onClick='Change_Ligne_Classif(this)' value='  Change  '/>
-	</td><td class='name'>
-		{{classif.name}}
-	</td><td class='hierarchy'>
-		<input id='{{classif.name}}' class='hierarchyInput' type='number' value='{{classif.hierarchy}}'/>
-	</td><td class='lacv'>
-		<input id='{{classif.name}}' class='lacvInput' type='number' value='{{classif.lacv}}'/>
-	</td>
-</tr>
-{% endfor %}
-</tr></tbody>
-
-<tfoot>
-<tr><form id="formClassif" method="post" data-ajax = 'false'>
-<td colspan = "2" align = "middle" ><input name='plus_button' type='button' onClick='Create_Ligne_Add_Classif()' value='  +  '></td>
-<td><input type="text" name="name"/></td>
-<td><input type="number" name="hierarchy"/></td>
-<td><input type="number" name="lacv"/></td>
-</form></tr>
-</tfoot>
-</table>
-</div>
-</table>
-</div>
-
-
-
-<script>
+/**
+ * 
+ */
 var serverHost = "http://x841.home:5000/";
 var urlClassifs = serverHost + "v1/classifications/";
 var xmlhttp = new XMLHttpRequest();
@@ -314,4 +248,3 @@ function classification_deleted(oid, classif) {
 	} // for
 	console.log("Internal Error. Classification not deleted :" + classif);
 } // classification_deleted
-</script>

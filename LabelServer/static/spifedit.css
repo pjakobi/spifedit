@@ -1,2 +1,4 @@
 @charset "UTF-8";
-body {background-color: lightyellow;}
+body {background-color:  PaleTurquoise;}
+th {text-align: left; }
+td.#addClassifButton { align: middle; }

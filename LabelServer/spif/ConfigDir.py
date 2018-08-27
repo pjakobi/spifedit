@@ -2,6 +2,7 @@
 
 import os
 from spif.ConfigFile import ConfigFile
+import syslog
 
 class ConfigDir(object):
     '''
@@ -9,7 +10,7 @@ class ConfigDir(object):
     '''
 # Object init - contains a list of objects (individual config files)
     def __init__(self, dirName):
-
+        syslog.syslog(syslog.LOG_DEBUG,'SPIF Directory: {0}'.format(dirName))
         self.directory = dirName
         self.files = []
         for name in os.listdir(dirName):

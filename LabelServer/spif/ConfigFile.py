@@ -3,6 +3,7 @@ from xml.dom import minidom
 import os
 from spif.Classification import Classification
 from spif.ObjectId import ObjectId 
+import syslog
 
 class ConfigFile(object):
     '''
@@ -16,6 +17,7 @@ class ConfigFile(object):
         '''
         Constructor
         '''
+        syslog.syslog(syslog.LOG_DEBUG,'SPIF: {0} - {1}'.format(dirName,fileName))
         doc = minidom.parse(os.path.join(dirName,fileName))
         self.fname = os.path.basename(fileName)
         els = doc.getElementsByTagNameNS('*', 'securityPolicyId')
@@ -26,6 +28,9 @@ class ConfigFile(object):
         else: raise ValueError("No security Policy name (attribute is mandatory)")
         if els[0].hasAttribute('id'):  self.oid = ObjectId(els[0].getAttribute('id'))
         else: raise ValueError("No security Policy Object Id (attribute is mandatory)")
+        
+        syslog.syslog(syslog.LOG_DEBUG,'SPIF oid for {0}: {1}'.format(fileName,self.oid))
+        
         '''
         Retrieve security classifications
         '''
@@ -48,6 +53,12 @@ class ConfigFile(object):
     
     def getClassifications(self):
         return self.classifications
+    
+    def getClassification(self, classif):
+        for item in self.classifications:
+            if classif == item.name: return item
+            # Classification not found
+        raise ValueError("Invalid classification {0} - object id {1}".format(classif.name,self.oid))
     
     def delClassification(self,classif):
         for item in self.classifications:
