@@ -4,6 +4,7 @@ import os
 from spif.Classification import Classification
 from spif.ObjectId import ObjectId 
 import syslog
+import gettext
 
 class ConfigFile(object):
     '''
@@ -17,19 +18,19 @@ class ConfigFile(object):
         '''
         Constructor
         '''
-        syslog.syslog(syslog.LOG_DEBUG,'SPIF: {0} - {1}'.format(dirName,fileName))
+        syslog.syslog(syslog.LOG_DEBUG,_('SPIF: {0} - {1}').format(dirName,fileName))
         doc = minidom.parse(os.path.join(dirName,fileName))
         self.fname = os.path.basename(fileName)
         els = doc.getElementsByTagNameNS('*', 'securityPolicyId')
         if els.length != 1: 
-            raise ValueError("No security Policy Id or more than one (one exactly expected)")
+            raise ValueError(_("No security Policy Id or more than one (one exactly expected)"))
             
         if els[0].hasAttribute('name'):  self.name = els[0].getAttribute('name')
-        else: raise ValueError("No security Policy name (attribute is mandatory)")
+        else: raise ValueError(_("No security Policy name (attribute is mandatory)"))
         if els[0].hasAttribute('id'):  self.oid = ObjectId(els[0].getAttribute('id'))
-        else: raise ValueError("No security Policy Object Id (attribute is mandatory)")
+        else: raise ValueError(_("No security Policy Object Id (attribute is mandatory)"))
         
-        syslog.syslog(syslog.LOG_DEBUG,'SPIF oid for {0}: {1}'.format(fileName,self.oid))
+        syslog.syslog(syslog.LOG_DEBUG,_('SPIF oid for {0}: {1}').format(fileName,self.oid))
         
         '''
         Retrieve security classifications
@@ -58,7 +59,7 @@ class ConfigFile(object):
         for item in self.classifications:
             if classif == item.name: return item
             # Classification not found
-        raise ValueError("Invalid classification {0} - object id {1}".format(classif.name,self.oid))
+        raise ValueError(_("Invalid classification {0} - object id {1}").format(classif.name,self.oid))
     
     def delClassification(self,classif):
         for item in self.classifications:
@@ -76,7 +77,7 @@ class ConfigFile(object):
         return returnValue
     
     def __str__(self):
-        result = "Config. file: {0} ({1}) - {2}\n".format(self.name,self.fname,str(self.oid))
+        result = _("Config. file: {0} ({1}) - {2}\n").format(self.name,self.fname,str(self.oid))
         for index in self.classifications: result += "{0}\n".format(str(index))
         return result
     
