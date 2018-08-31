@@ -1,0 +1,38 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR ORGANIZATION
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"POT-Creation-Date: 2018-08-29 19:53+CEST\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: ENCODING\n"
+"Generated-By: pygettext.py 1.5\n"
+
+
+#: ConfigDir.py:14
+msgid "SPIF Directory: {0}"
+msgstr ""
+
+#: ConfigDir.py:21
+msgid "No policy file in Directory. Correct /etc/x841.yaml."
+msgstr ""
+
+#: ConfigDir.py:27
+msgid "Unknown object id requested"
+msgstr ""
+
+#: ConfigDir.py:41
+msgid ""
+"ConfigFiles : {0}\n"
+msgstr ""
+
+#: ConfigDir.py:53
+msgid "Unknown object id requested (pls report bug)"
+msgstr ""
+

@@ -1,0 +1,46 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR ORGANIZATION
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"POT-Creation-Date: 2018-08-29 19:54+CEST\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: ENCODING\n"
+"Generated-By: pygettext.py 1.5\n"
+
+
+#: ConfigFile.py:21
+msgid "SPIF: {0} - {1}"
+msgstr ""
+
+#: ConfigFile.py:26
+msgid "No security Policy Id or more than one (one exactly expected)"
+msgstr ""
+
+#: ConfigFile.py:29
+msgid "No security Policy name (attribute is mandatory)"
+msgstr ""
+
+#: ConfigFile.py:31
+msgid "No security Policy Object Id (attribute is mandatory)"
+msgstr ""
+
+#: ConfigFile.py:33
+msgid "SPIF oid for {0}: {1}"
+msgstr ""
+
+#: ConfigFile.py:62
+msgid "Invalid classification {0} - object id {1}"
+msgstr ""
+
+#: ConfigFile.py:80
+msgid ""
+"Config. file: {0} ({1}) - {2}\n"
+msgstr ""
+

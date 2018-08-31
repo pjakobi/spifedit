@@ -1,81 +1,136 @@
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR ORGANIZATION
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# spifedit template
+# Pascal Jakobi <pascal.jakobi@gmail.com>, 2018.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: spifedit 1.0\n"
-"POT-Creation-Date: 2018-08-28 04:28+CEST\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: Pascal Jakobi <Pascal.Jakobi@gmail.com>\n"
-"Language-Team: French <LL@li.org>\n"
+"Project-Id-Version: spifedit 0.0\n"
+"POT-Creation-Date: 2018-08-29 19:54+CEST\n"
+"PO-Revision-Date: 2018-08-29 20:03+0200\n"
+"Last-Translator: Utilisateur <Pascal.Jakobi@gmail.com>\n"
+"Language-Team: French\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: pygettext.py 1.5\n"
+"Language: fr\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
+#: Classification.py:5
+msgid "Classification has no name"
+msgstr "Classification non nommée"
 
-#: serve.py:51
+#: Classification.py:14
+msgid "Classification : {0} - ({1}, {2})"
+msgstr "Classification : {0} - ({1}, {2})"
+
+#: ConfigDir.py:14
+msgid "SPIF Directory: {0}"
+msgstr "Répertoire SPIF: {0}"
+
+#: ConfigDir.py:21
+msgid "No policy file in Directory. Correct /etc/x841.yaml."
+msgstr "Pas de politique de sécurité dans le répertoire. Corriger  /etc/x841.yaml."
+
+#: ConfigDir.py:27
+msgid "Unknown object id requested"
+msgstr "Object id non trouvé"
+
+#: ConfigDir.py:41
+msgid "ConfigFiles : {0}\n"
+msgstr "ConfigFiles : {0}\n"
+
+#: ConfigDir.py:53
+msgid "Unknown object id requested (pls report bug)"
+msgstr "Object id non trouvé (bug)"
+
+#: ConfigFile.py:21
+msgid "SPIF: {0} - {1}"
+msgstr "SPIF: {0} - {1}"
+
+#: ConfigFile.py:26
+msgid "No security Policy Id or more than one (one exactly expected)"
+msgstr "Absence d'identificateur de politique de sécurité ou plus qu'un configuré"
+
+#: ConfigFile.py:29
+msgid "No security Policy name (attribute is mandatory)"
+msgstr "Absence de nom de politique de sécurité (attribut obligatoire)"
+
+#: ConfigFile.py:31
+msgid "No security Policy Object Id (attribute is mandatory)"
+msgstr "Absence d'object id de politique de sécurité (attribut obligatoire)"
+
+#: ConfigFile.py:33
+msgid "SPIF oid for {0}: {1}"
+msgstr "Object id du SPIF {0}: {1}"
+
+#: ConfigFile.py:62
+msgid "Invalid classification {0} - object id {1}"
+msgstr "Classification invalide : {0} - object id {1}"
+
+#: ConfigFile.py:80
+msgid "Config. file: {0} ({1}) - {2}\n"
+msgstr "Config.: {0} ({1}) - {2}\n"
+
+#: serve.py:57
 msgid "spif_config not set in /etc/x841/spifedit.yml. Using {0}."
 msgstr "spif_config non trouvé dans /etc/x841/spifedit.yml. Utilisation de {0}."
 
-#: serve.py:60
+#: serve.py:66
 msgid "Service started"
 msgstr "Service démarré"
 
-#: serve.py:65
+#: serve.py:71
 msgid "Configuration loaded"
 msgstr "Configuration chargée"
 
-#: serve.py:74
+#: serve.py:80
 msgid "Web app started"
 msgstr "Démarrage WebApp"
 
-#: serve.py:77
+#: serve.py:83
 msgid "showDefault oid {0} - selected {1}"
-msgstr ""
-
-#: serve.py:85
-msgid "showOid : show classifications for oid {0}"
 msgstr "showDefault oid {0} - selected {1}"
 
-#: serve.py:95
+#: serve.py:91
+msgid "showOid : show classifications for oid {0}"
+msgstr "showOid classifications {0}"
+
+#: serve.py:101
 msgid "Changing classification {1} for oid {0}"
 msgstr "Mise à jour classification {1} pour l'object id {0}"
 
-#: serve.py:101
+#: serve.py:107
 msgid "Hierarchy set from {0} to {1}, LACV set from {2} to {3}"
 msgstr "Hiérarchie : {0} -> {1}, LACV : {2} -> {3}"
 
-#: serve.py:111
+#: serve.py:117
 msgid "Adding classification {1} for oid {0}"
 msgstr "Ajout classification {1} pour l'object id {0}"
 
-#: serve.py:116
+#: serve.py:122
 msgid "Error : unnamed classification"
 msgstr "Erreur : classification non nommée"
 
-#: serve.py:118
+#: serve.py:124
 msgid "Error : no hierarchy in request"
 msgstr "Erreur : pas de hiérarchie"
 
-#: serve.py:120
+#: serve.py:126
 msgid "Error : no lacv in request"
 msgstr "Erreur : pas de 'label & cert value'"
 
-#: serve.py:124 serve.py:141
+#: serve.py:130 serve.py:147
 msgid "Unknown SPIF/object id"
 msgstr "SPIF/object id non trouvé"
 
-#: serve.py:128
+#: serve.py:134
 msgid "Added classification {0}/{1} (h:{2},l:{3})"
 msgstr "Classification ajoutée {0}/{1} (h:{2},l:{3})"
 
-#: serve.py:138
+#: serve.py:144
 msgid "Deleting classification {1} for oid {0}"
 msgstr "Effacement classification {1} - object id {0}"
 
-#: serve.py:143
+#: serve.py:149
 msgid "Deleted classification {0}"
 msgstr "Classification {0} effacée"
-

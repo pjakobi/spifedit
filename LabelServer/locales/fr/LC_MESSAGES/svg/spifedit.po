@@ -1,0 +1,81 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR ORGANIZATION
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: spifedit 1.0\n"
+"POT-Creation-Date: 2018-08-28 04:28+CEST\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: Pascal Jakobi <Pascal.Jakobi@gmail.com>\n"
+"Language-Team: French <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: pygettext.py 1.5\n"
+
+
+#: serve.py:51
+msgid "spif_config not set in /etc/x841/spifedit.yml. Using {0}."
+msgstr "spif_config non trouvé dans /etc/x841/spifedit.yml. Utilisation de {0}."
+
+#: serve.py:60
+msgid "Service started"
+msgstr "Service démarré"
+
+#: serve.py:65
+msgid "Configuration loaded"
+msgstr "Configuration chargée"
+
+#: serve.py:74
+msgid "Web app started"
+msgstr "Démarrage WebApp"
+
+#: serve.py:77
+msgid "showDefault oid {0} - selected {1}"
+msgstr ""
+
+#: serve.py:85
+msgid "showOid : show classifications for oid {0}"
+msgstr "showDefault oid {0} - selected {1}"
+
+#: serve.py:95
+msgid "Changing classification {1} for oid {0}"
+msgstr "Mise à jour classification {1} pour l'object id {0}"
+
+#: serve.py:101
+msgid "Hierarchy set from {0} to {1}, LACV set from {2} to {3}"
+msgstr "Hiérarchie : {0} -> {1}, LACV : {2} -> {3}"
+
+#: serve.py:111
+msgid "Adding classification {1} for oid {0}"
+msgstr "Ajout classification {1} pour l'object id {0}"
+
+#: serve.py:116
+msgid "Error : unnamed classification"
+msgstr "Erreur : classification non nommée"
+
+#: serve.py:118
+msgid "Error : no hierarchy in request"
+msgstr "Erreur : pas de hiérarchie"
+
+#: serve.py:120
+msgid "Error : no lacv in request"
+msgstr "Erreur : pas de 'label & cert value'"
+
+#: serve.py:124 serve.py:141
+msgid "Unknown SPIF/object id"
+msgstr "SPIF/object id non trouvé"
+
+#: serve.py:128
+msgid "Added classification {0}/{1} (h:{2},l:{3})"
+msgstr "Classification ajoutée {0}/{1} (h:{2},l:{3})"
+
+#: serve.py:138
+msgid "Deleting classification {1} for oid {0}"
+msgstr "Effacement classification {1} - object id {0}"
+
+#: serve.py:143
+msgid "Deleted classification {0}"
+msgstr "Classification {0} effacée"
+
