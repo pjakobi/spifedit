@@ -12,12 +12,12 @@
 
 <div id="dropdown">
 <label class="spifChoice" for="spifChoice">Security Policy Info. File </label>
-
 <select  id="spifChoice" onchange='policySelect(this.select)'>
 {% for item in items %}
 	<option value='{{item.oid}}' {% if selected == item.oid %}selected{% endif %}>{{item.name}} - {{item.oid}}</option>
 {% endfor %}
 </select>
+</div>
 
 <div id="divClassifs">
 <table id="tableClassifs" width=80% align=center >
@@ -57,6 +57,16 @@
 </div>
 </table>
 </div>
+
+<div id="tags">
+<label class="tag" for="spifChoice">Tag </label>
+<select  id="tagChoice" onchange='tagSelect(this.select)'>
+{% for tag in tags %}
+	<option value='{{tag.oid}}' {% if selected == tag.oid %}selected{% endif %}>{{tag.name}} - {{tag.oid}}</option>
+{% endfor %}
+</select>
+</div>
+
 
  <script src="/static/spifedit.js"></script>
 </body>

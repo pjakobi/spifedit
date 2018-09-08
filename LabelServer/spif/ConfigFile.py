@@ -5,43 +5,74 @@ from spif.Classification import Classification
 from spif.ObjectId import ObjectId 
 import syslog
 import gettext
+# import xmlspif
+# import pyxb
+import sys
+import spifDS
+from TagSet import TagSet
+from Tag import Tag
+from flask import current_app as app
+from PrivMark import PrivMark
+import xml.etree.ElementTree as ET
 
 class ConfigFile(object):
     '''
     classdocs
     '''
 
-      
-
-
-    def __init__(self, dirName, fileName):
+    def __init__(self, fileName, nameSpace):
         '''
         Constructor
         '''
-        syslog.syslog(syslog.LOG_DEBUG,_('SPIF: {0} - {1}').format(dirName,fileName))
-        doc = minidom.parse(os.path.join(dirName,fileName))
-        self.fname = os.path.basename(fileName)
-        els = doc.getElementsByTagNameNS('*', 'securityPolicyId')
-        if els.length != 1: 
-            raise ValueError(_("No security Policy Id or more than one (one exactly expected)"))
-            
-        if els[0].hasAttribute('name'):  self.name = els[0].getAttribute('name')
-        else: raise ValueError(_("No security Policy name (attribute is mandatory)"))
-        if els[0].hasAttribute('id'):  self.oid = ObjectId(els[0].getAttribute('id'))
-        else: raise ValueError(_("No security Policy Object Id (attribute is mandatory)"))
         
-        syslog.syslog(syslog.LOG_DEBUG,_('SPIF oid for {0}: {1}').format(fileName,self.oid))
+        global app;
+        
+        syslog.syslog(syslog.LOG_DEBUG,_('SPIF: {0} - {1}').format(os.path.basename(fileName),''))
+#       doc = minidom.parse(os.path.join(dirName,fileName))
+        self.fname = os.path.basename(fileName)
+     
+#       try: spifFile= xmlspif.CreateFromDocument(open(os.path.join(dirName,fileName)).read())
+#       except pyxb.ValidationError as e:
+#            print e.details()
+#            raise ValueError('Invalid XML document {0}'.format(fileName))
+        
+        spifFile = spifDS.parsexml_(fileName)
+        rootNode = spifFile.getroot()
+        
+        
+        # Name & Object Id are mandatory in the XSD
+        if len(rootNode.findall(nameSpace + 'securityPolicyId')) != 1:
+            syslog.syslog(syslog.LOG_NOTICE,_('Invalid XML document {0}'.format(fileName)))
+            return
+                    
+        policyId = rootNode.find(nameSpace + 'securityPolicyId')
+        self.oid = policyId.attrib['id']
+        self.name = policyId.attrib['name']
+        syslog.syslog(syslog.LOG_DEBUG,_('SPIF oid for {0}: {1}').format(os.path.basename(fileName),self.oid))
         
         '''
         Retrieve security classifications
         '''
         self.classifications = []
-        for x in doc.getElementsByTagNameNS('*', 'securityClassification'):
-            myDict = {}
-            if x.hasAttribute('name'): myDict['name'] = x.getAttribute('name')
-            if x.hasAttribute('lacv'): myDict['lacv'] = x.getAttribute('lacv')
-            if x.hasAttribute('hierarchy'): myDict['hierarchy'] = x.getAttribute('hierarchy')            
-            self.classifications.append(Classification(myDict))
+        for classifs in rootNode.iter(nameSpace + 'securityClassification'):
+            self.classifications.append(Classification(classifs,self.oid))
+
+        '''
+        Retrieve privacy marks
+        '''
+        self.privMarks  = []
+        for privMark in rootNode.iter(nameSpace + 'privacyMark'):
+            self.privMarks.append(PrivMark(self.fname, privMark))
+        
+                 
+        '''
+        Retrieve tags
+        '''
+        self.tagSets  = [] 
+        for index in rootNode.iter(nameSpace + 'securityCategoryTagSet'):
+            self.tagSets.append(TagSet(index, self.fname, nameSpace))
+            for index2 in index.iter(nameSpace + 'securityCategoryTag'):
+                tag = Tag(index2, self.fname, nameSpace)
     
     def getOid(self):
         return self.oid

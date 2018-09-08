@@ -1,0 +1,449 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://www.xmlspif.org/spif" targetNamespace="http://www.xmlspif.org/spif" elementFormDefault="unqualified" attributeFormDefault="unqualified">
+  <xs:simpleType name="version">
+    <xs:annotation>
+      <xs:documentation>Supported versions of the XML SPIF</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="1.0" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="oid">
+    <xs:annotation>
+      <xs:documentation>Object Identifier</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:pattern value="[0-2]\.[0-9\.]+" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="lacvInt">
+    <xs:annotation>
+      <xs:documentation>Label and Certificate integer or bit alue</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:integer" />
+  </xs:simpleType>
+  <xs:simpleType name="lacvString">
+    <xs:annotation>
+      <xs:documentation>Label and Certificate string value</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string" />
+  </xs:simpleType>
+  <xs:simpleType name="lacv">
+    <xs:union memberTypes="lacvInt lacvString" />
+  </xs:simpleType>
+  <xs:simpleType name="operation">
+    <xs:annotation>
+      <xs:documentation>How associated categories should be applied</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="onlyOne" />
+      <xs:enumeration value="oneOrMore" />
+      <xs:enumeration value="all" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="userInput">
+    <xs:annotation>
+      <xs:documentation>The format of a category value to be entered by the user.</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="string" />
+      <xs:enumeration value="integer" />
+      <xs:enumeration value="date" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="hierarchy">
+    <xs:annotation>
+      <xs:documentation>Hierarchy - used for dominance check</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:integer" />
+  </xs:simpleType>
+  <xs:simpleType name="className">
+    <xs:annotation>
+      <xs:documentation>Classification  Name</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:maxLength value="256" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:element name="excludedClass" type="className" />
+  <xs:simpleType name="policyName">
+    <xs:annotation>
+      <xs:documentation>Policy Name</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:maxLength value="256" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="markingPhrase">
+    <xs:annotation>
+      <xs:documentation>Marking Phrase</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:maxLength value="256" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="tagSetName">
+    <xs:annotation>
+      <xs:documentation>Tag Set Name</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:maxLength value="256" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="genTime">
+    <xs:annotation>
+      <xs:documentation>Tag Set Name</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string" />
+  </xs:simpleType>
+  <xs:simpleType name="markingCode">
+    <xs:annotation>
+      <xs:documentation>Location to display a component of the security label</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="pageTop" />
+      <xs:enumeration value="pageBottom" />
+      <xs:enumeration value="pageTopBottom" />
+      <xs:enumeration value="documentStart" />
+      <xs:enumeration value="documentEnd" />
+      <xs:enumeration value="noNameDisplay" />
+      <xs:enumeration value="noMarkingDisplay" />
+      <xs:enumeration value="suppressClassName" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:element name="code" type="markingCode" />
+  <xs:simpleType name="tagType">
+    <xs:annotation>
+      <xs:documentation>Type of security category</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="notApplicable" />
+      <xs:enumeration value="restrictive" />
+      <xs:enumeration value="enumerated" />
+      <xs:enumeration value="permissive" />
+      <xs:enumeration value="tagType7" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="enumType">
+    <xs:annotation>
+      <xs:documentation>Type of enumerated security category</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="restrictive" />
+      <xs:enumeration value="permissive" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="tag7Encoding">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="bitSetAttributes" />
+      <xs:enumeration value="securityAttributes" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="qualifierCode">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="prefix" />
+      <xs:enumeration value="suffix" />
+      <xs:enumeration value="separator" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="applied">
+    <xs:annotation>
+      <xs:documentation>When equivalencies can be applied</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="encrypt" />
+      <xs:enumeration value="decrypt" />
+      <xs:enumeration value="both" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="colorW3C">
+    <xs:annotation>
+      <xs:documentation>The color associated with a classification</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="aqua" />
+      <xs:enumeration value="black" />
+      <xs:enumeration value="blue" />
+      <xs:enumeration value="fuschia" />
+      <xs:enumeration value="gray" />
+      <xs:enumeration value="green" />
+      <xs:enumeration value="lime" />
+      <xs:enumeration value="maroon" />
+      <xs:enumeration value="navy" />
+      <xs:enumeration value="olive" />
+      <xs:enumeration value="purple" />
+      <xs:enumeration value="red" />
+      <xs:enumeration value="silver" />
+      <xs:enumeration value="teal" />
+      <xs:enumeration value="white" />
+      <xs:enumeration value="yellow" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="colorRGB">
+    <xs:restriction base="xs:string">
+      <xs:pattern value="#[0-9a-fA-F]{6}" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="color">
+    <xs:union memberTypes="colorW3C colorRGB" />
+  </xs:simpleType>
+  <xs:complexType name="optionalCategoryData">
+    <xs:annotation>
+      <xs:documentation>Categories associated with specific classification or category.</xs:documentation>
+    </xs:annotation>
+    <xs:attribute name="tagSetRef" type="tagSetName" use="required" />
+    <xs:attribute name="tagType" type="tagType" use="required" />
+    <xs:attribute name="enumType" type="enumType" use="optional" />
+    <xs:attribute name="lacv" type="lacv" />
+    <xs:attribute name="all" type="xs:boolean" />
+    <xs:anyAttribute />
+  </xs:complexType>
+  <xs:element name="categoryGroup" type="optionalCategoryData" />
+  <xs:element name="excludedCategory" type="optionalCategoryData" />
+  <xs:complexType name="optionalCategoryGroup">
+    <xs:sequence>
+      <xs:element ref="categoryGroup" maxOccurs="unbounded" />
+    </xs:sequence>
+    <xs:attribute name="operation" type="operation" />
+    <xs:anyAttribute />
+  </xs:complexType>
+  <xs:element name="requiredCategory" type="optionalCategoryGroup" />
+  <xs:complexType name="updateInfo" />
+  <xs:element name="updateInfo" type="updateInfo" />
+  <xs:complexType name="equivalentClassification">
+    <xs:attribute name="policyRef" type="policyName" use="required" />
+    <xs:attribute name="lacv" type="lacvInt" use="required" />
+    <xs:attribute name="applied" type="applied" use="required" />
+    <xs:anyAttribute />
+  </xs:complexType>
+  <xs:element name="equivalentClassification" type="equivalentClassification" />
+  <xs:complexType name="equivalentPolicy">
+    <xs:annotation>
+      <xs:documentation>Consolidates all equivalent policies in the SPIF</xs:documentation>
+    </xs:annotation>
+    <xs:attribute name="name" type="policyName" use="required" />
+    <xs:attribute name="id" type="oid" use="required" />
+    <xs:attribute name="userRefURI" type="xs:anyURI" />
+    <xs:attribute name="docRefURI" type="xs:anyURI" />
+    <xs:anyAttribute />
+  </xs:complexType>
+  <xs:element name="equivalentPolicy" type="equivalentPolicy" />
+  <xs:complexType name="equivalentPolicies">
+    <xs:sequence>
+      <xs:element ref="equivalentPolicy" maxOccurs="unbounded" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="equivalentPolicies" type="equivalentPolicies" />
+  <xs:complexType name="privacyMark">
+    <xs:annotation>
+      <xs:documentation>A privacy mark that may be used in the label.</xs:documentation>
+    </xs:annotation>
+    <xs:attribute name="name" type="xs:string" />
+        <xs:attribute name="obsolete" type="xs:boolean" default="false" />
+        <xs:anyAttribute />
+  </xs:complexType>
+  <xs:element name="privacyMark" type="privacyMark" />
+  <xs:complexType name="privacyMarks">
+    <xs:sequence>
+      <xs:element ref="privacyMark" maxOccurs="unbounded" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="privacyMarks" type="privacyMarks" />
+  <xs:complexType name="markingData">
+    <xs:sequence>
+      <xs:element ref="code" maxOccurs="unbounded" />
+    </xs:sequence>
+    <xs:attribute name="phrase" type="markingPhrase" />
+    <xs:anyAttribute />
+  </xs:complexType>
+  <xs:element name="markingData" type="markingData" />
+  <xs:complexType name="securityClassification">
+    <xs:annotation>
+      <xs:documentation>Security Classification</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element ref="equivalentClassification" minOccurs="0" maxOccurs="unbounded" />
+      <xs:element ref="markingData" minOccurs="0" maxOccurs="unbounded" />
+      <xs:element ref="requiredCategory" minOccurs="0" maxOccurs="unbounded" />
+    </xs:sequence>
+    <xs:attribute name="name" type="className" use="required" />
+    <xs:attribute name="color" type="color" />
+    <xs:attribute name="lacv" type="lacvInt" use="required" />
+    <xs:attribute name="hierarchy" type="hierarchy" use="required" />
+    <xs:attribute name="obsolete" type="xs:boolean" default="false" />
+    <xs:anyAttribute />
+  </xs:complexType>
+  <xs:element name="securityClassification" type="securityClassification" />
+  <xs:complexType name="securityClassifications">
+    <xs:sequence>
+      <xs:element ref="securityClassification" maxOccurs="unbounded" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="securityClassifications" type="securityClassifications" />
+  <xs:complexType name="equivalentSecCategoryTag">
+    <xs:attribute name="policyRef" type="policyName" use="required" />
+    <xs:attribute name="tagSetId" type="oid" use="required" />
+    <xs:attribute name="tagType" type="tagType" use="required" />
+    <xs:attribute name="enumType" type="enumType" />
+    <xs:attribute name="lacv" type="lacv" use="required" />
+    <xs:attribute name="applied" type="applied" use="required" />
+    <xs:anyAttribute />
+  </xs:complexType>
+  <xs:element name="equivalentSecCategoryTag" type="equivalentSecCategoryTag" />
+  <xs:complexType name="tagCategory">
+    <xs:sequence>
+      <xs:element ref="equivalentSecCategoryTag" minOccurs="0" maxOccurs="unbounded" />
+      <xs:element ref="markingData" minOccurs="0" maxOccurs="unbounded" />
+      <xs:element ref="excludedClass" minOccurs="0" maxOccurs="unbounded" />
+      <xs:element ref="requiredCategory" minOccurs="0" maxOccurs="unbounded" />
+      <xs:element ref="excludedCategory" minOccurs="0" maxOccurs="unbounded" />
+    </xs:sequence>
+    <xs:attribute name="name" type="xs:string" use="required" />
+    <xs:attribute name="lacv" type="lacv" use="required" />
+    <xs:attribute name="userInput" type="userInput" />
+    <xs:attribute name="requiredClass" type="className" />
+    <xs:attribute name="obsolete" type="xs:boolean" default="false" />
+    <xs:anyAttribute />
+  </xs:complexType>
+  <xs:element name="tagCategory" type="tagCategory" />
+  <xs:complexType name="qualifier">
+    <xs:attribute name="markingQualifier" type="markingPhrase" use="required" />
+    <xs:attribute name="qualifierCode" type="qualifierCode" use="required" />
+    <xs:anyAttribute />
+  </xs:complexType>
+  <xs:element name="qualifier" type="qualifier" />
+  <xs:complexType name="markingQualifier">
+    <xs:annotation>
+      <xs:documentation>Allows the display of the marking phrase at a specific location.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element ref="qualifier" maxOccurs="unbounded" />
+    </xs:sequence>
+    <xs:attribute name="markingCode" type="markingCode" />
+    <xs:anyAttribute />
+  </xs:complexType>
+  <xs:element name="markingQualifier" type="markingQualifier" />
+  <xs:complexType name="securityCategoryTag">
+    <xs:sequence>
+      <xs:element ref="tagCategory" minOccurs="0" maxOccurs="unbounded" />
+      <xs:element ref="markingQualifier" minOccurs="0" maxOccurs="unbounded" />
+    </xs:sequence>
+    <xs:attribute name="name" type="xs:string" />
+    <xs:attribute name="tagType" type="tagType" use="required" />
+    <xs:attribute name="enumType" type="enumType" />
+    <xs:attribute name="tag7Encoding" type="tag7Encoding" />
+    <xs:attribute name="singleSelection" type="xs:boolean" default="false" />
+    <xs:anyAttribute />
+  </xs:complexType>
+  <xs:element name="securityCategoryTag" type="securityCategoryTag" />
+  <xs:complexType name="securityCategoryTagSet">
+    <xs:sequence>
+      <xs:element ref="securityCategoryTag" maxOccurs="unbounded" />
+    </xs:sequence>
+    <xs:attribute name="name" type="tagSetName" use="required" />
+    <xs:attribute name="id" type="oid" use="required" />
+    <xs:anyAttribute />
+  </xs:complexType>
+  <xs:element name="securityCategoryTagSet" type="securityCategoryTagSet" />
+  <xs:complexType name="securityCategoryTagSets">
+    <xs:sequence>
+      <xs:element ref="securityCategoryTagSet" maxOccurs="unbounded" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="securityCategoryTagSets" type="securityCategoryTagSets" />
+  <xs:complexType name="objectIdData">
+    <xs:attribute name="name" type="policyName" use="required" />
+    <xs:attribute name="id" type="oid" use="required" />
+    <xs:anyAttribute />
+  </xs:complexType>
+  <xs:element name="defaultSecurityPolicyId" type="objectIdData" />
+  <xs:element name="securityPolicyId" type="objectIdData" />
+  <xs:complexType name="extensions">
+    <xs:annotation>
+      <xs:documentation>A set of vendor-specific extensions</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:any processContents="lax" minOccurs="0" maxOccurs="unbounded" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="extensions" type="extensions" />
+  <xs:element name="SPIF">
+    <xs:annotation>
+      <xs:documentation>Security Policy Information File</xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="defaultSecurityPolicyId" minOccurs="0" />
+        <xs:element ref="securityPolicyId" />
+        <xs:element ref="updateInfo" minOccurs="0" />
+        <xs:element ref="securityClassifications" />
+        <xs:element ref="securityCategoryTagSets" minOccurs="0" />
+        <xs:element ref="privacyMarks" minOccurs="0" />
+        <xs:element ref="equivalentPolicies" minOccurs="0" />
+        <xs:element ref="extensions" minOccurs="0" />
+      </xs:sequence>
+      <xs:attribute name="schemaVersion" type="version" use="required" />
+      <xs:attribute name="version" type="xs:integer" default="1" />
+      <xs:attribute name="creationDate" type="genTime" use="required" />
+      <xs:attribute name="originatorDN" type="xs:string" use="required" />
+      <xs:attribute name="keyIdentifier" type="xs:string" use="required" />
+      <xs:attribute name="privilegeId" type="oid" use="required" />
+      <xs:attribute name="rbacId" type="oid" use="required" />
+      <xs:attribute name="userRefURI" type="xs:anyURI" />
+      <xs:attribute name="docRefURI" type="xs:anyURI" />
+      <xs:anyAttribute />
+    </xs:complexType>
+    <xs:unique name="uqPolicyId">
+      <xs:selector xpath="equivalentPolicies/equivalentPolicy | defaultSecurityPolicyId" />
+      <xs:field xpath="@id" />
+    </xs:unique>
+    <xs:key name="stPolicy">
+      <xs:selector xpath="equivalentPolicies/equivalentPolicy | defaultSecurityPolicyId" />
+      <xs:field xpath="@name" />
+    </xs:key>
+    <xs:keyref name="refPolicy1" refer="stPolicy">
+      <xs:selector xpath="securityClassification/equivalentClassification | securityClassifications/securityClassification/equivalentClassification" />
+      <xs:field xpath="@policyRef" />
+    </xs:keyref>
+    <xs:keyref name="refPolicy2" refer="stPolicy">
+      <xs:selector xpath="securityCategoryTagSet/securityCategoryTag/tagCategory/equivalentSecCategoryTag | securityCategoryTagSets/securityCategoryTagSet/securityCategoryTag/tagCategory/equivalentSecCategoryTag" />
+      <xs:field xpath="@policyRef" />
+    </xs:keyref>
+    <xs:key name="stClass">
+      <xs:selector xpath="securityClassification | securityClassifications/securityClassification" />
+      <xs:field xpath="@name" />
+    </xs:key>
+    <xs:unique name="uqClass">
+      <xs:selector xpath="securityClassifications/securityClassification" />
+      <xs:field xpath="@lacv" />
+    </xs:unique>
+    <xs:unique name="uqClassColor">
+      <xs:selector xpath="securityClassification | securityClassifications/securityClassification" />
+      <xs:field xpath="@color" />
+    </xs:unique>
+    <xs:keyref name="refClass1" refer="stClass">
+      <xs:selector xpath="securityCategoryTagSet/securityCategoryTag/tagCategory | securityCategoryTagSets/securityCategoryTagSet/securityCategoryTag/tagCategory" />
+      <xs:field xpath="@requiredClass" />
+    </xs:keyref>
+    <xs:keyref name="refClass2" refer="stClass">
+      <xs:selector xpath="securityCategoryTagSet/securityCategoryTag/tagCategory/excludedClass | securityCategoryTagSets/securityCategoryTagSet/securityCategoryTag/tagCategory/excludedClass" />
+      <xs:field xpath="." />
+    </xs:keyref>
+    <xs:key name="stTagSet">
+      <xs:selector xpath="securityCategoryTagSet | securityCategoryTagSets/securityCategoryTagSet" />
+      <xs:field xpath="@name" />
+    </xs:key>
+    <xs:keyref name="refTagSet1" refer="stTagSet">
+      <xs:selector xpath="securityCategoryTagSet/securityCategoryTag/tagCategory/requiredCategory/categoryGroup | securityCategoryTagSets/securityCategoryTagSet/securityCategoryTag/tagCategory/requiredCategory/categoryGroup" />
+      <xs:field xpath="@tagSetRef" />
+    </xs:keyref>
+    <xs:keyref name="refTagSet2" refer="stTagSet">
+      <xs:selector xpath="securityCategoryTagSet/securityCategoryTag/tagCategory/excludedCategory | securityCategoryTagSets/securityCategoryTagSet/securityCategoryTag/tagCategory/excludedCategory" />
+      <xs:field xpath="@tagSetRef" />
+    </xs:keyref>
+    <xs:keyref name="refTagSet3" refer="stTagSet">
+      <xs:selector xpath="securityClassification/requiredCategory/categoryGroup | securityClassifications/securityClassification/requiredCategory/categoryGroup" />
+      <xs:field xpath="@tagSetRef" />
+    </xs:keyref>
+  </xs:element>
+</xs:schema>

@@ -30,7 +30,8 @@ app.config['SECRET_KEY'] = 'SPIFedit'
 app.config['CORS_HEADERS'] = 'Content-Type'
 app.config['CONFIG_FILE'] = '/etc/x841/spifedit.yml'
 app.config['CONFIG_DIRECTORY'] = '/opt/x841/spifedit'
-
+app.config['XML_PREFIX'] = '{http://www.xmlspif.org/spif}'
+app.config[''] = '/opt/x841/spifedit'
 configDir = None
 
 def jsonDefault(object):
@@ -50,6 +51,7 @@ def loadConfig():
         configDict=yaml.load(open(app.config['CONFIG_FILE']))
         if not configDict.has_key('Log level'): configDict['Log level'] = syslog.LOG_INFO
         if not configDict.has_key('spif facility'): configDict['spif facility'] = syslog.LOG_LOCAL5
+        if not configDict.has_key('XML prefix'): configDict['XML prefix'] = 'http://www.xmlspif.org/spif'
         if configDict.has_key('spif config'): app.config['CONFIG_DIRECTORY'] = configDict['spif config']
         else: 
             syslog.syslog(
@@ -59,6 +61,9 @@ def loadConfig():
         configDict = {}
         configDict['spif facility'] = syslog.LOG_LOCAL5
         configDict['Log level'] = syslog.LOG_INFO
+        configDict['XML prefix'] = 'http://www.xmlspif.org/spif'
+    
+    if configDict.has_key('XML prefix'): app.config['XML_PREFIX'] = '{' + configDict['XML prefix'] + '}'
     
     # First of all, configure logging
     syslog.setlogmask(syslog.LOG_UPTO(int(configDict['Log level'])))
@@ -66,7 +71,7 @@ def loadConfig():
     syslog.syslog(syslog.LOG_NOTICE, _('Service started'))
     
     # Then configure application
-    configDir = ConfigDir(app.config['CONFIG_DIRECTORY'])
+    configDir = ConfigDir(app.config['CONFIG_DIRECTORY'],app.config['XML_PREFIX'])
     configFiles = glob.glob(configDict['spif config'] + "/*.spif")
     syslog.syslog(syslog.LOG_INFO, _('Configuration loaded'))
     

@@ -10,13 +10,13 @@ class ConfigDir(object):
     classdocs
     '''
 # Object init - contains a list of objects (individual config files)
-    def __init__(self, dirName):
+    def __init__(self, dirName,nameSpace):
         syslog.syslog(syslog.LOG_DEBUG,_('SPIF Directory: {0}').format(dirName))
         self.directory = dirName
         self.files = []
         for name in os.listdir(dirName):
             if os.path.isfile(os.path.join(dirName,name)) and name.endswith('.spif'): 
-                self.files.append(ConfigFile(dirName,name))
+                self.files.append(ConfigFile(os.path.join(dirName,name),nameSpace))
         if len(self.files) < 1: # No file in Directory
             raise ValueError(_("No policy file in Directory. Correct /etc/x841.yaml."))
                     
